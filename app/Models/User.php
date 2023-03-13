@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function usersgroup(){
+        return $this->belongsTo('App\Models\UsersGroup');
+    }
+
+    public function checklists(){
+		return $this->hasMany('App\Models\Checklist');
+	}
 }
