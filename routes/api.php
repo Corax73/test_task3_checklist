@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\Api\ChecklistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(RegisterController::class)
-->group(function () {
+-> group(function () {
     Route::post('/register', 'register');
 });
+
+Route::apiResource('checklists', ChecklistController::class);
