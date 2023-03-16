@@ -12,38 +12,6 @@ use Validator;
 class RegisterController extends Controller
 {
     /**
-     * success response method.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function sendResponse($result, $message)
-    {
-      $response = [
-            'success' => true,
-            'data'    => $result,
-            'message' => $message,
-        ];
-        return response() -> json($response, 200);
-    }
-
-    /**
-     * return error response.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function sendError($error, $errorMessages = [], $code = 404)
-    {
-      $response = [
-            'success' => false,
-            'message' => $error,
-        ];
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
-        }
-        return response() -> json($response, $code);
-    }
-
-    /**
      * Register api
      *
      * @return \Illuminate\Http\Response
@@ -51,14 +19,14 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validData = Validator::make($request -> all(), [
-            'name' => 'required',
+            'name' => 'required|unique:users',
             'email' => 'required|email',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
 
         if($validData -> fails()){
-            return $this -> sendError('Validation Error.', $validData -> errors());       
+            return sendError('Validation Error.', $validData -> errors());       
         }
         
         $inputData = $request -> all();
@@ -66,6 +34,6 @@ class RegisterController extends Controller
         $user = User::create($inputData);
         $success['token'] =  $user -> createToken('MyApp') -> accessToken;
         $success['name'] =  $user -> name;
-        return $this -> sendResponse($success, 'User register successfully.');
+        return sendResponse($success, 'User register successfully.');
     }
 }

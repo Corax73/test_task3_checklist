@@ -26,9 +26,8 @@ class ChecklistController extends Controller
         $input = $request -> all();
 
         $validator = Validator::make($input, [
-            'name' => 'required',
-            'user_id' => 'required',
-            'description' => 'required'            
+            'name' => 'required|unique:checklists',
+            'user_id' => 'required'            
         ]);
 
         if($validator -> fails()){
@@ -40,15 +39,30 @@ class ChecklistController extends Controller
 
         $checklist = Checklist::create($inputForChecklist);
         
-        $inputForItemChecklist['description'] = $input['description'];
-        $inputForItemChecklist['checklists_id'] = $checklist -> id;
-        $inputForItemChecklist['implementation'] = 0;
-
-        $itemChecklist = ItemChecklist::create($inputForItemChecklist);
-
         $response[] = $checklist -> toArray();
-        $response[$itemChecklist -> id] = $itemChecklist -> toArray();
 
         return sendResponse($response, 'Checklist created successfully.');
+    }
+
+    public function createItemChecklist(Request $request)
+    {
+        $input = $request -> all();
+
+        $validator = Validator::make($input, [
+            'checklists_id' => 'required',
+            'description' => 'required'            
+        ]);
+
+        if($validator -> fails()){
+            return sendError('Validation Error.', $validator -> errors());       
+        }
+        
+        $input['implementation'] = 0;
+
+        $itemChecklist = ItemChecklist::create($input);
+
+        $response[$itemChecklist -> id] = $itemChecklist -> toArray();
+
+        return sendResponse($response, 'Item for checklist created successfully.');
     }
 }

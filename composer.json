@@ -23,7 +23,7 @@
     },
     "autoload": {
         "files": [
-            "app/Http/Controllers/Api/Helpers/SendResponceHelper.php",
+            "app/Http/Controllers/Api/Helpers/SendResponseHelper.php",
             "app/Http/Controllers/Api/Helpers/SendErrorHelper.php"
         ],
         "psr-4": {

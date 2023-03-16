@@ -25,4 +25,6 @@ Route::controller(RegisterController::class)
     Route::post('/register', 'register');
 });
 
-Route::apiResource('checklists', ChecklistController::class);
+Route::post('checklists', [ChecklistController::class, 'store']);
+
+Route::post('checklists/create', [ChecklistController::class, 'createItemChecklist']);
