@@ -30,4 +30,5 @@ Route::controller(ChecklistController::class)
     Route::middleware('auth:api') -> post('checklists', 'store');
     Route::middleware('auth:api') -> post('checklists/create', 'createItemChecklist');
     Route::middleware('auth:api') -> get('checklists/getUsersChecklists/{user_id}', 'getUsersChecklists');
+    Route::middleware('auth:api') -> get('checklists/getItemsChecklists/{checklist_id}', 'getItemsChecklists');
 });

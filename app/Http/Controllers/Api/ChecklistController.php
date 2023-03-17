@@ -78,4 +78,11 @@ class ChecklistController extends Controller
 
         return $user -> checklists;
     }
+
+    public function getItemsChecklists($checklist_id)
+    {
+        $checklists = Checklist::findOrFail($checklist_id);
+
+        return $checklists -> items;
+    }
 }

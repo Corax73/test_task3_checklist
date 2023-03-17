@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('item_checklists', function (Blueprint $table) {
             $table->id();
             $table->text('description');
-            $table->bigInteger('checklists_id')->unsigned();
+            $table->bigInteger('checklist_id')->unsigned();
             $table->foreign('checklists_id')
                 ->references('id')
                 ->on('checklists')
