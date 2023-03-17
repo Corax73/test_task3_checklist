@@ -51,17 +51,17 @@ class ChecklistController extends Controller
         $input = $request -> all();
 
         $validator = Validator::make($input, [
-            'checklists_id' => 'required',
+            'checklist_id' => 'required',
             'description' => [
                 'required',
-                Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklists_id', 21))
+                Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklist_id', $input['checklist_id']))
                 ]           
         ]);
 
         if($validator -> fails()){
             return sendError('Validation Error.', $validator -> errors());       
         }
-        
+
         $input['implementation'] = 0;
 
         $itemChecklist = ItemChecklist::create($input);
@@ -75,14 +75,40 @@ class ChecklistController extends Controller
     {
         //$user = User::findOrFail(Auth::id());
         $user = User::findOrFail($user_id);
+        $response[] = $user -> checklists -> toArray();
 
-        return $user -> checklists;
+        return sendResponse($response, 'Checklist ' . $user['name']);
     }
 
     public function getItemsChecklists($checklist_id)
     {
         $checklists = Checklist::findOrFail($checklist_id);
+        $response[] = $checklists -> items -> toArray();
 
-        return $checklists -> items;
+        return sendResponse($response, 'Item\'s of ' . $checklists['name']);
+    }
+
+    public function setItemsImplementation(Request $request, $checklist_id, $item_description, $implementation)
+    {
+        
+        $input['implementation'] = $implementation;
+
+        $validator = Validator::make($input, [
+            'implementation' => 'required|integer|gte:0|lte:1'          
+        ]);
+
+        if($validator -> fails()){
+            return sendError('Validation Error.', $validator -> errors());       
+        }
+
+        $idItemChecklist = ItemChecklist::where('checklist_id', $checklist_id) -> where('description', $item_description) -> firstOrFail();
+
+        $itemChecklist = ItemChecklist::where('checklist_id', $checklist_id) -> where('description', $item_description) -> update(['implementation' => $implementation]);
+        
+        $itemChecklist = ItemChecklist::findOrFail($idItemChecklist -> id);
+
+        $response[] = $itemChecklist -> toArray();
+        
+        return sendResponse($response, 'Implementation\'s of ' . $itemChecklist['description'] . 'set ' . ($implementation == true ? 'true' : 'false'));
     }
 }

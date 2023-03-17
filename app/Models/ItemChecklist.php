@@ -16,7 +16,7 @@ class ItemChecklist extends Model
      */
     protected $fillable = [
         'description',
-        'checklists_id',
+        'checklist_id',
         'implementation',
     ];
 }
