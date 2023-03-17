@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -36,4 +37,6 @@ class RegisterController extends Controller
         $success['name'] =  $user -> name;
         return sendResponse($success, 'User register successfully.');
     }
+
+
 }

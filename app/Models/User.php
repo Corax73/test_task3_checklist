@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Http\Request;
 
 class User extends Authenticatable
 {
@@ -42,11 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function usersgroup(){
+    public function usersgroup()
+    {
         return $this->belongsTo('App\Models\UsersGroup');
     }
 
-    public function checklists(){
+    public function checklists()
+    {
 		return $this->hasMany('App\Models\Checklist');
+	}
+
+    public function getAbility(Request $request)
+    {
+		return dd($request);
 	}
 }

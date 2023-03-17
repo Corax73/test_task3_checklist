@@ -19,11 +19,13 @@ class Checklist extends Model
         'user_id'
     ];
 
-    public function whoUser(){
+    public function whoUser()
+    {
         return $this->belongsTo('App\Models\User');
     }
 
-    public function items(){
+    public function items()
+    {
 		return $this->hasMany('App\Models\ItemChecklist');
 	}
 }

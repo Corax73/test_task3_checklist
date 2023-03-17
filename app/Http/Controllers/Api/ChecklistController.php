@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
 use App\Models\Checklist;
 use App\Models\ItemChecklist;
 use App\Http\Controllers\Api\RegisterController;
@@ -50,7 +52,10 @@ class ChecklistController extends Controller
 
         $validator = Validator::make($input, [
             'checklists_id' => 'required',
-            'description' => 'required'            
+            'description' => [
+                'required',
+                Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklists_id', 21))
+                ]           
         ]);
 
         if($validator -> fails()){
@@ -64,5 +69,13 @@ class ChecklistController extends Controller
         $response[$itemChecklist -> id] = $itemChecklist -> toArray();
 
         return sendResponse($response, 'Item for checklist created successfully.');
+    }
+
+    public function getUsersChecklists($user_id)
+    {
+        //$user = User::findOrFail(Auth::id());
+        $user = User::findOrFail($user_id);
+
+        return $user -> checklists;
     }
 }
