@@ -27,14 +27,19 @@ class RegisterController extends Controller
         ]);
 
         if($validData -> fails()){
-            return sendError('Validation Error.', $validData -> errors());       
+
+            return sendError('Validation Error.', $validData -> errors());
+        
         }
         
         $inputData = $request -> all();
         $inputData['password'] = bcrypt($inputData['password']);
+
         $user = User::create($inputData);
+
         $success['token'] =  $user -> createToken('MyApp') -> accessToken;
         $success['name'] =  $user -> name;
+
         return sendResponse($success, 'User register successfully.');
     }
 

@@ -1,19 +1,21 @@
 <?php
 
-if (! function_exists('sendResponse')) {
+if (! function_exists('sendError')) {
 
     /**
-     * return error response.
+     * success response method.
      *
      * @return \Illuminate\Http\Response
      */
-    function sendResponse($result, $message)
+    function sendError($error, $errorMessages = [], $code = 404)
     {
         $response = [
-            'success' => true,
-            'data'    => $result,
-            'message' => $message,
+            'success' => false,
+            'message' => $error,
         ];
-        return response() -> json($response, 200);
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+        return response() -> json($response, $code);
     }
 }

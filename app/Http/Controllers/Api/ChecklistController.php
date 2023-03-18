@@ -29,11 +29,13 @@ class ChecklistController extends Controller
 
         $validator = Validator::make($input, [
             'name' => 'required|unique:checklists',
-            'user_id' => 'required'            
+            'user_id' => 'required|integer'            
         ]);
 
         if($validator -> fails()){
-            return sendError('Validation Error.', $validator -> errors());       
+
+            return sendError('Validation Error.', $validator -> errors());
+
         }
 
         $inputForChecklist['name'] = $input['name'];
@@ -51,7 +53,7 @@ class ChecklistController extends Controller
         $input = $request -> all();
 
         $validator = Validator::make($input, [
-            'checklist_id' => 'required',
+            'checklist_id' => 'required|integer',
             'description' => [
                 'required',
                 Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklist_id', $input['checklist_id']))
@@ -74,41 +76,141 @@ class ChecklistController extends Controller
     public function getUsersChecklists($user_id)
     {
         //$user = User::findOrFail(Auth::id());
-        $user = User::findOrFail($user_id);
-        $response[] = $user -> checklists -> toArray();
+        $input['user_id'] = $user_id;
+        
+        $validator = Validator::make($input, [
+            'user_id' => 'required|integer'           
+        ]);
 
-        return sendResponse($response, 'Checklist ' . $user['name']);
+        if($validator -> fails()){
+
+            return sendError('Validation Error.', $validator -> errors());
+        
+        }
+
+        if ($user = User::find($user_id)) {
+
+            $response[] = $user -> checklists -> toArray();
+            return sendResponse($response, 'Checklist ' . $user['name']);
+
+        } else {
+
+            return 'User not found';
+        }
     }
 
     public function getItemsChecklists($checklist_id)
     {
-        $checklists = Checklist::findOrFail($checklist_id);
-        $response[] = $checklists -> items -> toArray();
+        $input['checklist_id'] = $checklist_id;
+        
+        $validator = Validator::make($input, [
+            'checklist_id' => 'required|integer'           
+        ]);
 
-        return sendResponse($response, 'Item\'s of ' . $checklists['name']);
+        if($validator -> fails()){
+
+            return sendError('Validation Error.', $validator -> errors());
+
+        }
+
+        if ($checklists = Checklist::find($checklist_id)) {
+
+            $response[] = $checklists -> items -> toArray();
+            return sendResponse($response, 'Item\'s of ' . $checklists['name']);
+            
+        } else {
+
+            return 'Checklist not found';
+
+        }
     }
 
-    public function setItemsImplementation(Request $request, $checklist_id, $item_description, $implementation)
+    public function setItemsImplementation($checklist_id, $item_description, $implementation)
     {
         
+        $input['checklist_id'] = $checklist_id;
+        $input['description'] = $item_description;
         $input['implementation'] = $implementation;
 
         $validator = Validator::make($input, [
+            'checklist_id' => 'required|integer',
+            'description' => 'required',
             'implementation' => 'required|integer|gte:0|lte:1'          
         ]);
 
         if($validator -> fails()){
-            return sendError('Validation Error.', $validator -> errors());       
+
+            return sendError('Validation Error.', $validator -> errors());
+
         }
 
-        $idItemChecklist = ItemChecklist::where('checklist_id', $checklist_id) -> where('description', $item_description) -> firstOrFail();
+        if ($idItemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
 
-        $itemChecklist = ItemChecklist::where('checklist_id', $checklist_id) -> where('description', $item_description) -> update(['implementation' => $implementation]);
-        
-        $itemChecklist = ItemChecklist::findOrFail($idItemChecklist -> id);
+            $itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> update(['implementation' => $input['implementation']]);
+            $itemChecklist = ItemChecklist::find($idItemChecklist -> id);
+            $response[] = $itemChecklist -> toArray();
+            return sendResponse($response, 'Implementation\'s of ' . $itemChecklist['description'] . 'set ' . ($input['implementation'] == true ? 'true' : 'false'));
 
-        $response[] = $itemChecklist -> toArray();
+        } else {
+
+            return 'ItemChecklist not found';
+
+        }
+    }
+
+    public function destroyUsersChecklists($checklist_id)
+    {
+        $input['checklist_id'] = $checklist_id;
         
-        return sendResponse($response, 'Implementation\'s of ' . $itemChecklist['description'] . 'set ' . ($implementation == true ? 'true' : 'false'));
+        $validator = Validator::make($input, [
+            'checklist_id' => 'required|integer'           
+        ]);
+
+        if($validator -> fails()){
+
+            return sendError('Validation Error.', $validator -> errors());
+        
+        }
+
+        if ($checklist = Checklist::find($input['checklist_id'])) {
+            
+            $checklist -> delete();
+            $response['Checklist'] = 'removed';
+            return sendResponse($response, 'Checklist removed');
+
+        } else {
+
+            return 'Checklist not found';
+
+        }
+    }
+
+    public function destroyItemsChecklists($checklist_id, $item_description)
+    {
+        $input['checklist_id'] = $checklist_id;
+        $input['description'] = $item_description;
+        
+        $validator = Validator::make($input, [
+            'checklist_id' => 'required|integer',
+            'description' => 'required'          
+        ]);
+
+        if($validator -> fails()){
+
+            return sendError('Validation Error.', $validator -> errors());
+
+        }
+
+        if ($itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
+
+            $itemChecklist -> delete();
+            $response['ItemChecklist'] = 'removed';
+            return sendResponse($response, 'ItemChecklist removed');
+
+        } else {
+
+            return 'ItemChecklist not found';
+
+        }
     }
 }

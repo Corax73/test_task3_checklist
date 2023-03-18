@@ -31,5 +31,7 @@ Route::controller(ChecklistController::class)
     Route::middleware('auth:api') -> post('checklists/createItemChecklist', 'createItemChecklist');
     Route::middleware('auth:api') -> get('checklists/getUsersChecklists/{user_id}', 'getUsersChecklists');
     Route::middleware('auth:api') -> get('checklists/getItemsChecklists/{checklist_id}', 'getItemsChecklists');
-    Route::middleware('auth:api') -> get('checklists/setItemsImplementation/{checklist_id}/{item_description}/{implementation}', 'setItemsImplementation');
+    Route::middleware('auth:api') -> patch('checklists/setItemsImplementation/{checklist_id}/{item_description}/{implementation}', 'setItemsImplementation');
+    Route::middleware('auth:api') -> delete('checklists/deleteChecklists/{checklist_id}', 'destroyUsersChecklists');
+    Route::middleware('auth:api') -> delete('checklists/deleteItemsChecklists/{checklist_id}/{item_description}', 'destroyItemsChecklists');
 });
