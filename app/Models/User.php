@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'usersgroup_id'
     ];
 
     /**
@@ -45,16 +46,16 @@ class User extends Authenticatable
 
     public function usersgroup()
     {
-        return $this->belongsTo('App\Models\UsersGroup');
+        return $this -> belongsTo('App\Models\UsersGroup');
     }
 
     public function checklists()
     {
-		return $this->hasMany('App\Models\Checklist');
+		return $this -> hasMany('App\Models\Checklist');
 	}
 
-    public function getAbility(Request $request)
+    /*public function getAbility(Request $request)
     {
 		return dd($request);
-	}
+	}*/
 }

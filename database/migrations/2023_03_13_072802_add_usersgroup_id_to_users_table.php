@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('users_groups_id')->unsigned()->nullable();
-            $table->foreign('users_groups_id')
+            $table->bigInteger('usersgroup_id')->unsigned()->nullable();
+            $table->foreign('usersgroup_id')
                 ->references('id')
-                ->on('users_groups')
+                ->on('usersgroup_id')
                 ->onDelete('cascade');
         });
     }

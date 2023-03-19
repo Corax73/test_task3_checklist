@@ -13,7 +13,9 @@ use Illuminate\Database\Query\Builder;
 use App\Models\Checklist;
 use App\Models\ItemChecklist;
 use App\Http\Controllers\Api\RegisterController;
-
+use App\Models\UsersGroup;
+use App\Models\GroupAbilities;
+use App\Models\AbilityGroup;
 
 class ChecklistController extends Controller
 {
@@ -25,192 +27,388 @@ class ChecklistController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request -> all();
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
 
-        $validator = Validator::make($input, [
-            'name' => 'required|unique:checklists',
-            'user_id' => 'required|integer'            
-        ]);
-
-        if($validator -> fails()){
-
-            return sendError('Validation Error.', $validator -> errors());
+            return 'You have no rights';
 
         }
-
-        $inputForChecklist['name'] = $input['name'];
-        $inputForChecklist['user_id'] = $input['user_id'];
-
-        $checklist = Checklist::create($inputForChecklist);
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
         
-        $response[] = $checklist -> toArray();
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        return sendResponse($response, 'Checklist created successfully.');
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
+
+        }
+        
+        if (in_array(1, $abilityGroup)) {
+            
+            $input = $request -> all();
+            
+            $validator = Validator::make($input, [
+
+                'name' => 'required|unique:checklists',
+                'user_id' => 'required|integer'
+
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            $inputForChecklist['name'] = $input['name'];
+            $inputForChecklist['user_id'] = $input['user_id'];
+            
+            $checklist = Checklist::create($inputForChecklist);
+            
+            $response[] = $checklist -> toArray();
+            
+            return sendResponse($response, 'Checklist created successfully.');
+
+        } else {
+            
+            return 'You have no rights';
+        }
+        
     }
 
     public function createItemChecklist(Request $request)
     {
-        $input = $request -> all();
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
 
-        $validator = Validator::make($input, [
-            'checklist_id' => 'required|integer',
-            'description' => [
-                'required',
-                Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklist_id', $input['checklist_id']))
-                ]           
-        ]);
+            return 'You have no rights';
 
-        if($validator -> fails()){
-            return sendError('Validation Error.', $validator -> errors());       
         }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
+        
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        $input['implementation'] = 0;
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
-        $itemChecklist = ItemChecklist::create($input);
+        }
+        
+        if (in_array(3, $abilityGroup)) {
 
-        $response[$itemChecklist -> id] = $itemChecklist -> toArray();
+            $input = $request -> all();
+            
+            $validator = Validator::make($input, [
 
-        return sendResponse($response, 'Item for checklist created successfully.');
+                'checklist_id' => 'required|integer',
+                'description' => [
+                    'required',
+                    Rule::unique('item_checklists') -> where(fn (Builder $query) => $query -> where('checklist_id', $input['checklist_id']))
+                    ]
+
+                ]);
+                
+                if($validator -> fails()){
+                    
+                    return sendError('Validation Error.', $validator -> errors());
+                
+                }
+                
+                $input['implementation'] = 0;
+                
+                $itemChecklist = ItemChecklist::create($input);
+                
+                $response[$itemChecklist -> id] = $itemChecklist -> toArray();
+                
+                return sendResponse($response, 'Item for checklist created successfully.');
+            
+            } else {
+                
+                return 'You have no rights';
+            
+            }
+        
     }
 
     public function getUsersChecklists($user_id)
     {
-        //$user = User::findOrFail(Auth::id());
-        $input['user_id'] = $user_id;
-        
-        $validator = Validator::make($input, [
-            'user_id' => 'required|integer'           
-        ]);
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
 
-        if($validator -> fails()){
+            return 'You have no rights';
 
-            return sendError('Validation Error.', $validator -> errors());
-        
         }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
+        
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        if ($user = User::find($user_id)) {
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
-            $response[] = $user -> checklists -> toArray();
-            return sendResponse($response, 'Checklist ' . $user['name']);
+        }
+        
+        if (in_array(7, $abilityGroup)) {
 
+            $input['user_id'] = $user_id;
+            
+            $validator = Validator::make($input, [
+
+                'user_id' => 'required|integer'
+
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            if ($user = User::find($user_id)) {
+                
+                $response[] = $user -> checklists -> toArray();
+
+                return sendResponse($response, 'Checklist ' . $user['name']);
+            
+            } else {
+                
+                return 'User not found';
+            }
         } else {
-
-            return 'User not found';
+            return 'You have no rights';
+        
         }
     }
 
     public function getItemsChecklists($checklist_id)
     {
-        $input['checklist_id'] = $checklist_id;
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
+
+            return 'You have no rights';
+
+        }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
         
-        $validator = Validator::make($input, [
-            'checklist_id' => 'required|integer'           
-        ]);
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        if($validator -> fails()){
-
-            return sendError('Validation Error.', $validator -> errors());
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
         }
-
-        if ($checklists = Checklist::find($checklist_id)) {
-
-            $response[] = $checklists -> items -> toArray();
-            return sendResponse($response, 'Item\'s of ' . $checklists['name']);
+        
+        if (in_array(8, $abilityGroup)) {
             
+            $input['checklist_id'] = $checklist_id;
+            
+            $validator = Validator::make($input, [
+                
+                'checklist_id' => 'required|integer'
+            
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            if ($checklists = Checklist::find($checklist_id)) {
+                
+                $response[] = $checklists -> items -> toArray();
+                
+                return sendResponse($response, 'Item\'s of ' . $checklists['name']);
+            
+            } else {
+                
+                return 'Checklist not found';
+            
+            }
+        
         } else {
-
-            return 'Checklist not found';
-
+            
+            return 'You have no rights';
+        
         }
+
     }
 
     public function setItemsImplementation($checklist_id, $item_description, $implementation)
     {
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
+
+            return 'You have no rights';
+
+        }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
         
-        $input['checklist_id'] = $checklist_id;
-        $input['description'] = $item_description;
-        $input['implementation'] = $implementation;
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        $validator = Validator::make($input, [
-            'checklist_id' => 'required|integer',
-            'description' => 'required',
-            'implementation' => 'required|integer|gte:0|lte:1'          
-        ]);
-
-        if($validator -> fails()){
-
-            return sendError('Validation Error.', $validator -> errors());
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
         }
-
-        if ($idItemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
-
-            $itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> update(['implementation' => $input['implementation']]);
-            $itemChecklist = ItemChecklist::find($idItemChecklist -> id);
-            $response[] = $itemChecklist -> toArray();
-            return sendResponse($response, 'Implementation\'s of ' . $itemChecklist['description'] . 'set ' . ($input['implementation'] == true ? 'true' : 'false'));
-
+        
+        if (in_array([5, 6], $abilityGroup)) {
+            
+            $input['checklist_id'] = $checklist_id;
+            $input['description'] = $item_description;
+            $input['implementation'] = $implementation;
+            
+            $validator = Validator::make($input, [
+                
+                'checklist_id' => 'required|integer',
+                'description' => 'required',
+                'implementation' => 'required|integer|gte:0|lte:1'
+            
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            if ($idItemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
+                
+                $itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> update(['implementation' => $input['implementation']]);
+                $itemChecklist = ItemChecklist::find($idItemChecklist -> id);
+                $response[] = $itemChecklist -> toArray();
+                
+                return sendResponse($response, 'Implementation\'s of ' . $itemChecklist['description'] . 'set ' . ($input['implementation'] == true ? 'true' : 'false'));
+            
+            } else {
+                
+                return 'ItemChecklist not found';
+            
+            }
+        
         } else {
-
-            return 'ItemChecklist not found';
-
+            
+            return 'You have no rights';
+        
         }
+
     }
 
     public function destroyUsersChecklists($checklist_id)
     {
-        $input['checklist_id'] = $checklist_id;
-        
-        $validator = Validator::make($input, [
-            'checklist_id' => 'required|integer'           
-        ]);
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
 
-        if($validator -> fails()){
+            return 'You have no rights';
 
-            return sendError('Validation Error.', $validator -> errors());
-        
         }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
+        
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        if ($checklist = Checklist::find($input['checklist_id'])) {
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
+
+        }
+        
+        if (in_array(2, $abilityGroup)) {
             
-            $checklist -> delete();
-            $response['Checklist'] = 'removed';
-            return sendResponse($response, 'Checklist removed');
-
+            $input['checklist_id'] = $checklist_id;
+            
+            $validator = Validator::make($input, [
+                
+                'checklist_id' => 'required|integer'
+            
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            if ($checklist = Checklist::find($input['checklist_id'])) {
+                
+                $checklist -> delete();
+                $response['Checklist'] = 'removed';
+                
+                return sendResponse($response, 'Checklist removed');
+        
+            } else {
+                
+                return 'Checklist not found';
+            
+            }
+        
         } else {
-
-            return 'Checklist not found';
-
+            
+            return 'You have no rights';
+        
         }
+        
     }
 
     public function destroyItemsChecklists($checklist_id, $item_description)
     {
-        $input['checklist_id'] = $checklist_id;
-        $input['description'] = $item_description;
-        
-        $validator = Validator::make($input, [
-            'checklist_id' => 'required|integer',
-            'description' => 'required'          
-        ]);
+        $user = User::find(Auth::id());
+        if (!isset($user -> usersgroup -> name)) {
 
-        if($validator -> fails()){
-
-            return sendError('Validation Error.', $validator -> errors());
+            return 'You have no rights';
 
         }
+        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
+        
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = $groupAbilities -> toArray();
+        
+        for ($i = 0; $i < count($groupAbilities); $i++) {
 
-        if ($itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
+            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
-            $itemChecklist -> delete();
-            $response['ItemChecklist'] = 'removed';
-            return sendResponse($response, 'ItemChecklist removed');
+        }
+        
+        if (in_array(4, $abilityGroup)) {
+            
+            $input['checklist_id'] = $checklist_id;
+            $input['description'] = $item_description;
+            
+            $validator = Validator::make($input, [
+                
+                'checklist_id' => 'required|integer',
+                'description' => 'required'
 
+            ]);
+            
+            if($validator -> fails()){
+                
+                return sendError('Validation Error.', $validator -> errors());
+            
+            }
+            
+            if ($itemChecklist = ItemChecklist::where('checklist_id', $input['checklist_id']) -> where('description', $input['description']) -> first()) {
+                
+                $itemChecklist -> delete();
+                $response['ItemChecklist'] = 'removed';
+                
+                return sendResponse($response, 'ItemChecklist removed');
+            
+            } else {
+                
+                return 'ItemChecklist not found';
+            
+            }
+            
         } else {
-
-            return 'ItemChecklist not found';
-
+            
+            return 'You have no rights';
+        
         }
     }
 }

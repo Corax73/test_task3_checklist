@@ -9,7 +9,8 @@ class AbilityGroup extends Model
 {
     use HasFactory;
 
-    public function groupsAbilities(){
-		return $this->hasMany('App\Models\GroupAbilities');
-	}
+    public function groupsAbilities()
+    {
+      return $this->hasMany('App\Models\GroupAbilities');
+    }
 }

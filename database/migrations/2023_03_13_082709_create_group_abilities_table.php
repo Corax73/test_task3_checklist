@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('group_abilities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('users_groups_id')->unsigned();
-            $table->foreign('users_groups_id')
+            $table->bigInteger('usersgroup_id')->unsigned();
+            $table->foreign('usersgroup_id')
                 ->references('id')
                 ->on('users_groups')
                 ->onDelete('cascade');
-            $table->bigInteger('ability_groups_id')->unsigned();
-            $table->foreign('ability_groups_id')
+            $table->bigInteger('abilitygroup_id')->unsigned();
+            $table->foreign('abilitygroup_id')
                 ->references('id')
                 ->on('ability_groups')
                 ->onDelete('cascade');

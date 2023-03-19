@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class GroupAbilities extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'abilitygroup_id',
+    ];
+    public function getAbilities()
+    {
+      return $this -> belongsTo('App\Models\UsersGroup');
+    }
 }

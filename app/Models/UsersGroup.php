@@ -9,7 +9,17 @@ class UsersGroup extends Model
 {
     use HasFactory;
 
-    public function users(){
-		return $this->hasMany('App\Models\User');
-	}
+    protected $fillable = [
+      'name',
+    ];
+
+    public function users()
+    {
+      return $this->hasMany('App\Models\User');
+    }
+
+    /**public function getAbilities()
+    {
+      return $this -> hasMany('App\Models\GroupAbilities');
+    }*/
 }
