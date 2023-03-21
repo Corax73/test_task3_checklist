@@ -179,23 +179,6 @@ class ChecklistController extends Controller
 
     public function setItemsImplementation($checklist_id, $item_description, $implementation)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
         
         if(checkAbility(5) AND checkAbility(6)) {
             
