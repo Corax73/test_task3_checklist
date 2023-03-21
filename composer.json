@@ -24,6 +24,7 @@
     "autoload": {
         "files": [
             "app/Http/Controllers/Api/Helpers/SendResponseHelper.php",
+            "app/Http/Controllers/Api/Helpers/CheckCountUsersChecklistsHelper.php",
             "app/Http/Controllers/Api/Helpers/SendErrorHelper.php"
         ],
         "psr-4": {

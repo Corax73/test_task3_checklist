@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('usersgroup_id')->unsigned();
             $table->foreign('usersgroup_id')
                 ->references('id')
-                ->on('users_groups')
+                ->on('usersgroups')
                 ->onDelete('cascade');
             $table->bigInteger('abilitygroup_id')->unsigned();
             $table->foreign('abilitygroup_id')

@@ -25,7 +25,7 @@ class ChecklistController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createChecklist(Request $request)
     {
         $user = User::find(Auth::id());
         if (!isset($user -> usersgroup -> name)) {
@@ -33,6 +33,7 @@ class ChecklistController extends Controller
             return 'You have no rights';
 
         }
+        
         $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
         
         $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
@@ -45,6 +46,12 @@ class ChecklistController extends Controller
         }
         
         if (in_array(1, $abilityGroup)) {
+            
+            if (checkCountUsersChecklists($request)) {
+
+                return 'The user\'s maximum number of checklists has been exceeded';
+
+            }
             
             $input = $request -> all();
             
@@ -171,13 +178,14 @@ class ChecklistController extends Controller
                 
                 $response[] = $user -> checklists -> toArray();
 
-                return sendResponse($response, 'Checklist ' . $user['name']);
+                return sendResponse($response, $user['name'] . ' checklist list.');
             
             } else {
                 
                 return 'User not found';
             }
         } else {
+
             return 'You have no rights';
         
         }
@@ -246,6 +254,7 @@ class ChecklistController extends Controller
             return 'You have no rights';
 
         }
+
         $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
         
         $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
@@ -256,8 +265,8 @@ class ChecklistController extends Controller
             $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
         }
-        
-        if (in_array([5, 6], $abilityGroup)) {
+
+        if (in_array(5, $abilityGroup) AND in_array(6, $abilityGroup)) {
             
             $input['checklist_id'] = $checklist_id;
             $input['description'] = $item_description;

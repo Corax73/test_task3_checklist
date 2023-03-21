@@ -27,7 +27,7 @@ Route::controller(RegisterController::class)
 
 Route::controller(ChecklistController::class)
 -> group(function () {
-    Route::middleware('auth:api') -> post('checklists/createChecklists', 'store');
+    Route::middleware('auth:api') -> post('checklists/createChecklists', 'createChecklist');
     Route::middleware('auth:api') -> post('checklists/createItemChecklist', 'createItemChecklist');
     Route::middleware('auth:api') -> get('checklists/getUsersChecklists/{user_id}', 'getUsersChecklists');
     Route::middleware('auth:api') -> get('checklists/getItemsChecklists/{checklist_id}', 'getItemsChecklists');

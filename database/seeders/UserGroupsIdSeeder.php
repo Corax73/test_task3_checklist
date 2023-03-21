@@ -15,10 +15,10 @@ class UserGroupsIdSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users') -> where('name', 'test') -> update(['users_groups_id' => 1]);
+        DB::table('users') -> where('name', 'test') -> update(['usersgroup_id' => 1]);
         
         for ($i = 2; $i <= 4; $i++) {
-            DB::table('users') -> where('name', 'test' . ($i - 1)) -> update(['users_groups_id' => $i]);
+            DB::table('users') -> where('name', 'test' . ($i - 1)) -> update(['usersgroup_id' => $i]);
         }
     }
 }

@@ -18,32 +18,32 @@ class GroupAbilitiesSeeder extends Seeder
         //for SuperAdmin
         for ($i = 1; $i <= 8; $i++) {
             DB::table('group_abilities') -> insert([
-                'users_groups_id' => 1,
-                'ability_groups_id' => $i
+                'usersgroup_id' => 1,
+                'abilitygroup_id' => $i
             ]);
         }
 
         //for Admin
         for ($i = 1; $i <= 8; $i++) {
             DB::table('group_abilities') -> insert([
-                'users_groups_id' => 2,
-                'ability_groups_id' => $i
+                'usersgroup_id' => 2,
+                'abilitygroup_id' => $i
             ]);
         }
 
         //for Moderator
         for ($i = 5; $i <= 8; $i++) {
             DB::table('group_abilities') -> insert([
-                'users_groups_id' => 3,
-                'ability_groups_id' => $i
+                'usersgroup_id' => 3,
+                'abilitygroup_id' => $i
             ]);
         }
 
         // for User
         for ($i = 7; $i <= 8; $i++) {
             DB::table('group_abilities') -> insert([
-                'users_groups_id' => 4,
-                'ability_groups_id' => $i
+                'usersgroup_id' => 4,
+                'abilitygroup_id' => $i
             ]);
         }
 

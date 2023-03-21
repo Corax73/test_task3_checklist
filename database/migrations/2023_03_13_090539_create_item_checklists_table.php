@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('description');
             $table->bigInteger('checklist_id')->unsigned();
-            $table->foreign('checklists_id')
+            $table->foreign('checklist_id')
                 ->references('id')
                 ->on('checklists')
                 ->onDelete('cascade');
