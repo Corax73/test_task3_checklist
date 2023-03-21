@@ -15,7 +15,7 @@ if (! function_exists('checkAbility')) {
     function checkAbility($numberAbility)
     {
         
-        $user = User::find(Auth::id());
+        $user = Auth::user();
         if (!isset($user -> usersgroup -> name)) {
 
             return 'You have no rights';
