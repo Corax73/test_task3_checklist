@@ -27,25 +27,7 @@ class ChecklistController extends Controller
      */
     public function createChecklist(Request $request)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(1, $abilityGroup)) {
+        if(checkAbility(1)) {
             
             if (checkCountUsersChecklists($request)) {
 
@@ -86,24 +68,7 @@ class ChecklistController extends Controller
 
     public function createItemChecklist(Request $request)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(3, $abilityGroup)) {
+        if(checkAbility(3)) {
 
             $input = $request -> all();
             
@@ -141,24 +106,7 @@ class ChecklistController extends Controller
 
     public function getUsersChecklists($user_id)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(7, $abilityGroup)) {
+        if(checkAbility(7)) {
 
             $input['user_id'] = $user_id;
             
@@ -193,24 +141,7 @@ class ChecklistController extends Controller
 
     public function getItemsChecklists($checklist_id)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(8, $abilityGroup)) {
+        if(checkAbility(8)) {
             
             $input['checklist_id'] = $checklist_id;
             
@@ -265,8 +196,8 @@ class ChecklistController extends Controller
             $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
 
         }
-
-        if (in_array(5, $abilityGroup) AND in_array(6, $abilityGroup)) {
+        
+        if(checkAbility(5) AND checkAbility(6)) {
             
             $input['checklist_id'] = $checklist_id;
             $input['description'] = $item_description;
@@ -310,24 +241,7 @@ class ChecklistController extends Controller
 
     public function destroyUsersChecklists($checklist_id)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(2, $abilityGroup)) {
+        if(checkAbility(2)) {
             
             $input['checklist_id'] = $checklist_id;
             
@@ -366,24 +280,7 @@ class ChecklistController extends Controller
 
     public function destroyItemsChecklists($checklist_id, $item_description)
     {
-        $user = User::find(Auth::id());
-        if (!isset($user -> usersgroup -> name)) {
-
-            return 'You have no rights';
-
-        }
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
-        $groupAbilities = $groupAbilities -> toArray();
-        
-        for ($i = 0; $i < count($groupAbilities); $i++) {
-
-            $abilityGroup[$i] = $groupAbilities[$i]['abilitygroup_id'];
-
-        }
-        
-        if (in_array(4, $abilityGroup)) {
+        if(checkAbility(4)) {
             
             $input['checklist_id'] = $checklist_id;
             $input['description'] = $item_description;

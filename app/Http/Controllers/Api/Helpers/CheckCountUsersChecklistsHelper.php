@@ -8,7 +8,7 @@ if (! function_exists('checkCountUsersChecklists')) {
     /**
      * @param  \Illuminate\Http\Request  $request
      * success response method.
-     *@return \Illuminate\Http\Response
+     *@return bool
      */
     function checkCountUsersChecklists(Request $request)
     {
