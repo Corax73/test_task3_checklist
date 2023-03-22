@@ -71,11 +71,14 @@
                         <th>Created_at</th>
                         <th>Usersgroup id</th>
                         <th>Usersgroup name</th>
+                        <th>Change usersgroup</th>
                     </thead>
                     <tbody>
                        @foreach($users as $key => $user)
                            @if($user)
                         <tr>
+                           <form method="POST" action="{{ route('changeGroup', $user -> id ) }}" accept-charset="UTF-8">
+                                    @csrf
                             <td class="table-text">
                                 <p>{{ $user -> name }}</p>
                             </td>
@@ -94,6 +97,15 @@
                             <td class="table-text">
                                 <p>{{ $usersGroupNames[$user -> id] }}</p>                                
                             </td>
+                            <td class="table-text">
+                                <p><select name="selection_group" class="select">
+                                    @foreach($names as $name)
+                                    <option value="{{ $name }}">{{ $name }}</option>
+                                    @endforeach
+                                </select></p>
+                                <p><input type="submit" class="b1" value="Change"></p>
+                            </td>
+                            </form>
                         </tr>
                             @endif
                         @endforeach

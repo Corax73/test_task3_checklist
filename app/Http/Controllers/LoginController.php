@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Validation\Rule;
+use App\Models\UsersGroup;
 
 class LoginController extends Controller
 {
@@ -37,6 +38,7 @@ class LoginController extends Controller
             if ($checkUser -> usersgroup -> name == 'SuperAdmin') {
 
                 Auth::once($input);
+                
                 return redirect('/dashboard');
 
             }
@@ -59,18 +61,45 @@ class LoginController extends Controller
 
         }
 
+        $groupNames = UsersGroup::all();
+        
+        for ($i = 0; $i < count($groupNames); $i++) {
+
+            $names[$i] = $groupNames[$i]['name'];
+
+        }
+
         return view('layouts.dashboard', [
             'users' => $users,
-            'usersGroupNames' => $usersGroupNames
+            'usersGroupNames' => $usersGroupNames,
+            'names' => $names
         ]);
 
     }
 
     public function logout()
     {
+
         Auth::logout();
         
         return redirect('/');
+
+    }
+
+    public function changeGroup($id, Request $request)
+    {
+
+        $selectionGroup = $request ->  only('selection_group');
+
+        $user = User::find($id);
+
+        $group = UsersGroup::where('name', $selectionGroup) -> first();
+
+        $newGroupId['usersgroup_id'] = $group -> id;
+
+        $user -> update($newGroupId);
+
+        return redirect('/dashboard');
 
     }
 }
