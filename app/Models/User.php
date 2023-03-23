@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this -> belongsTo('App\Models\UsersGroup');
     }
 
+    public function membershipId()
+    {
+        return $this -> hasOne(Groupmembership::class, 'user_id', 'id');
+    }
+
     public function checklists()
     {
 		return $this -> hasMany('App\Models\Checklist');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\UsersGroup;
+use App\Models\Groupmembership;
 
 class LoginController extends Controller
 {
@@ -35,7 +36,7 @@ class LoginController extends Controller
 
             $checkUser = User::where('email', $input['email']) -> first();
             
-            if ($checkUser -> usersgroup -> name == 'SuperAdmin') {
+            if(UsersGroup::find($checkUser -> membershipID -> usersgroup_id) -> name == 'SuperAdmin') {
 
                 Auth::once($input);
                 
@@ -54,11 +55,23 @@ class LoginController extends Controller
     {
 
         $users = User::all();
-
+        
         foreach ($users as $key => $user) {
-
-            $usersGroupNames[$user -> id] = isset($user -> usersgroup -> name) ? $user -> usersgroup -> name : 'No';
-
+            
+            if(isset($user -> membershipID -> usersgroup_id)) {
+                
+                $idGroup = $user -> membershipID -> usersgroup_id;
+                
+                $usergroup = UsersGroup::find($idGroup) -> toArray();
+                
+                $usersGroupNames[$user -> id] = $usergroup['name'];
+            
+            } else {
+                
+                $usersGroupNames[$user -> id] = 'No';
+            
+            }
+        
         }
 
         $groupNames = UsersGroup::all();
@@ -98,6 +111,20 @@ class LoginController extends Controller
         $newGroupId['usersgroup_id'] = $group -> id;
 
         $user -> update($newGroupId);
+
+        $membership['user_id'] = $user -> id;
+        $membership['usersgroup_id'] = $group -> id;
+
+        if($groupmember = Groupmembership::where('user_id', $user -> id) -> first()) {
+
+            $groupmember = Groupmembership::where('user_id', $user -> id) -> first();
+            $groupmember -> update(['usersgroup_id' => $group -> id]);
+
+        } else {
+            
+            $groupmember = Groupmembership::create($membership);
+
+        }
 
         return redirect('/dashboard');
 
