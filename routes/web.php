@@ -22,4 +22,5 @@ Route::controller(LoginController::class)
     Route::get('/dashboard', 'users') -> name('users');
     Route::post('/logout', 'logout') -> name('logout');
     Route::post('/dashboard/{id}', 'change') -> name('change');
+    Route::get('/checklists/{id}', 'checklists') -> name('checklists');
 });

@@ -21,7 +21,7 @@ class Checklist extends Model
 
     public function whoUser()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this -> hasOne(User::class, 'id', 'user_id');;
     }
 
     public function items()

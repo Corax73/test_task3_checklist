@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Models\UsersGroup;
 use App\Models\Groupmembership;
 use App\Models\CountCheclistsForUser;
+use App\Models\Checklist;
 
 class LoginController extends Controller
 {
@@ -83,7 +84,7 @@ class LoginController extends Controller
 
         }
 
-        return view('layouts.dashboard', [
+        return view('layouts.manage', [
             'users' => $users,
             'usersGroupNames' => $usersGroupNames,
             'names' => $names
@@ -147,5 +148,15 @@ class LoginController extends Controller
 
         return redirect('/dashboard');
 
+    }
+
+    public function checklists(Request $request)
+    {
+
+        $checklists = Checklist::where('user_id', $request -> id) -> get();
+        
+        return view('layouts.checklists', [
+            'checklists' => $checklists
+        ]);
     }
 }
