@@ -18,8 +18,4 @@ class UsersGroup extends Model
       return $this->hasMany('App\Models\User');
     }
 
-    /**public function getAbilities()
-    {
-      return $this -> hasMany('App\Models\GroupAbilities');
-    }*/
 }

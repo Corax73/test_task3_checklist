@@ -9,6 +9,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\UsersGroup;
 use App\Models\Groupmembership;
+use App\Models\CountCheclistsForUser;
 
 class LoginController extends Controller
 {
@@ -68,7 +69,7 @@ class LoginController extends Controller
             
             } else {
                 
-                $usersGroupNames[$user -> id] = 'No';
+                $usersGroupNames[$user -> id] = 'No set';
             
             }
         
@@ -99,31 +100,49 @@ class LoginController extends Controller
 
     }
 
-    public function changeGroup($id, Request $request)
+    public function change($id, Request $request)
     {
+        switch ($request -> input('action')) {
 
-        $selectionGroup = $request ->  only('selection_group');
+            case 'Change':
+                
+                $selectionGroup = $request ->  only('selection_group');
+                
+                $group = UsersGroup::where('name', $selectionGroup) -> first();
+                
+                $membership['user_id'] = $id;
+                $membership['usersgroup_id'] = $group -> id;
+                
+                if($groupmember = Groupmembership::where('user_id', $id) -> first()) {
+                    
+                    $groupmember = Groupmembership::where('user_id', $id) -> first();
+                    
+                    $groupmember -> update(['usersgroup_id' => $group -> id]);
+                
+                } else {
+                    
+                    $groupmember = Groupmembership::create($membership);
+                
+                }
+                
+                break;
 
-        $user = User::find($id);
+            case 'Set max':
+                
+                $data['max'] = $request -> max;
+                $data['user_id'] = $id;
 
-        $group = UsersGroup::where('name', $selectionGroup) -> first();
+                if($max = CountCheclistsForUser::where('user_id', $id) -> first()) {
 
-        $newGroupId['usersgroup_id'] = $group -> id;
+                    $max -> update($data);
 
-        $user -> update($newGroupId);
+                } else {
+                    
+                    $setMax = CountCheclistsForUser::create($data);
 
-        $membership['user_id'] = $user -> id;
-        $membership['usersgroup_id'] = $group -> id;
-
-        if($groupmember = Groupmembership::where('user_id', $user -> id) -> first()) {
-
-            $groupmember = Groupmembership::where('user_id', $user -> id) -> first();
-            $groupmember -> update(['usersgroup_id' => $group -> id]);
-
-        } else {
-            
-            $groupmember = Groupmembership::create($membership);
-
+                }
+                
+                break;
         }
 
         return redirect('/dashboard');

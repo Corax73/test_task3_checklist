@@ -72,12 +72,13 @@
                         <th>Usersgroup id</th>
                         <th>Usersgroup name</th>
                         <th>Change usersgroup</th>
+                        <th>Max count checklists</th>
                     </thead>
                     <tbody>
                        @foreach($users as $key => $user)
                            @if($user)
                         <tr>
-                           <form method="POST" action="{{ route('changeGroup', $user -> id ) }}" accept-charset="UTF-8">
+                           <form method="POST" action="{{ route('change', $user -> id ) }}" accept-charset="UTF-8">
                                     @csrf
                             <td class="table-text">
                                 <p>{{ $user -> name }}</p>
@@ -92,7 +93,7 @@
                                 <p>{{ $user -> created_at }}</p>
                             </td>
                             <td class="table-text">
-                                <p>{{ $user -> usersgroup_id ? $user -> usersgroup_id : 'No' }}</p>
+                                <p>{{ $user -> membershipID ? $user -> membershipID -> usersgroup_id : 'No set' }}</p>
                             </td>
                             <td class="table-text">
                                 <p>{{ $usersGroupNames[$user -> id] }}</p>                                
@@ -103,7 +104,15 @@
                                     <option value="{{ $name }}">{{ $name }}</option>
                                     @endforeach
                                 </select></p>
-                                <p><input type="submit" class="b1" value="Change"></p>
+                                <p><input type="submit" name="action" class="b1" value="Change"></p>
+                            </td>
+                            <td class="table-text">
+                                <p>{{ $user -> max ? $user -> max -> max : 'No set' }}</p>
+                            </td>
+                            <td class="table-text">
+                                <label for="max">Enter max count users checklists:</label>
+                                <input type="number" id="max" name="max" min="0" max="10"> 
+                                <p><input type="submit" name="action" class="b1" value="Set max"></p>
                             </td>
                             </form>
                         </tr>

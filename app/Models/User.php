@@ -45,14 +45,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function usersgroup()
-    {
-        return $this -> belongsTo('App\Models\UsersGroup');
-    }
 
     public function membershipId()
     {
         return $this -> hasOne(Groupmembership::class, 'user_id', 'id');
+    }
+
+    public function max()
+    {
+        return $this -> hasOne(CountCheclistsForUser::class, 'user_id', 'id');
     }
 
     public function checklists()
@@ -60,8 +61,4 @@ class User extends Authenticatable
 		return $this -> hasMany('App\Models\Checklist');
 	}
 
-    /*public function getAbility(Request $request)
-    {
-		return dd($request);
-	}*/
 }

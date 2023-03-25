@@ -21,5 +21,5 @@ Route::controller(LoginController::class)
     Route::post('/', 'auth') -> name('auth');
     Route::get('/dashboard', 'users') -> name('users');
     Route::post('/logout', 'logout') -> name('logout');
-    Route::post('/dashboard/{id}', 'changeGroup') -> name('changeGroup');
+    Route::post('/dashboard/{id}', 'change') -> name('change');
 });
