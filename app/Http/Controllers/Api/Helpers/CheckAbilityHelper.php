@@ -16,15 +16,13 @@ if (! function_exists('checkAbility')) {
     {
         
         $user = Auth::user();
-        if (!isset($user -> usersgroup -> name)) {
+        if(!($user -> membershipID)) {
 
-            return 'You have no rights';
+            return false;
 
-        }
+        } else {
         
-        $usersGroup = UsersGroup::where('name', $user -> usersgroup -> name) -> first();
-        
-        $groupAbilities = GroupAbilities::where('usersgroup_id', $usersGroup -> id) -> get();
+        $groupAbilities = GroupAbilities::where('usersgroup_id', $user -> membershipID -> usersgroup_id) -> get();
         $groupAbilities = $groupAbilities -> toArray();
         
         for ($i = 0; $i < count($groupAbilities); $i++) {
@@ -42,5 +40,7 @@ if (! function_exists('checkAbility')) {
             return false;
 
         }
+
+    }
     }
 }
