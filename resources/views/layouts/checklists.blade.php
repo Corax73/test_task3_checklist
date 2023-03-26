@@ -12,11 +12,11 @@
                        @foreach($checklists as $checklist)
                            @if($checklist)
                         <tr>
-                           <form method="POST" action="" accept-charset="UTF-8">
+                           <form method="POST" action="{{ route('listChecklists', $checklist -> id ) }}" accept-charset="UTF-8">
                                     @csrf
                             <td class="table-text">
                                 <p>{{ $checklist -> name }}</p>
-                                <p><button type="submit" value="List"></button></p>
+                                <p><button type="submit" class="b1" value="List">List</button></p>
                             </td>
                             <td class="table-text">
                                 <p>{{ $checklist -> id }}</p>                                
@@ -33,7 +33,4 @@
                         @endforeach
                     </tbody>
                 </table>
-
-<a href="{{ route('users') }}">To the dashboards</a>
-
 @endsection

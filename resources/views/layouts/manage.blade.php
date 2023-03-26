@@ -48,6 +48,9 @@
                                 <p>{{ $user -> max ? $user -> max -> max : 'No set' }}</p>
                                 <label for="max">Enter max count users checklists:</label>
                                 <input type="number" id="max" name="max" min="0" max="10"> 
+                                @if ($errors->has('max'))
+                                <span class="text-danger">{{ $errors->first('max') }}</span>
+                                @endif
                                 <p><input type="submit" name="action" class="b1" value="Set max"></p>
                             </td>
                             </form>

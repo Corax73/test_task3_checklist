@@ -19,4 +19,9 @@ class ItemChecklist extends Model
         'checklist_id',
         'implementation',
     ];
+
+    public function checklistId()
+    {
+        return $this -> hasOne(Checklist::class, 'id', 'checklist_id');
+    }
 }

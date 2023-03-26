@@ -3,20 +3,20 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Админка</title>
+    <title>Admin panel</title>
     <meta name="description" content="админка">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Стили -->
    
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     
 
     <!-- Font Awesome иконки -->
     <script src="https://kit.fontawesome.com/4a23243fb41.js" crossorigin="anonymous"></script>
 
     <!-- jQuery и скрипты -->
-    <script src="js/main.js"></script>
+    <script src="/js/main.js"></script>
 
 </head>
 <body>
@@ -25,22 +25,22 @@
 
         <!-- Заголовок -->
         <header class="dashboard-header">
-            <h1 class="dashboard-header__logo">Админка</h1>
+            <h1 class="dashboard-header__logo">Admin panel</h1>
         </header>
 
         <!-- Левое меню -->
         <nav class="sidebar-menu">
             <ul class="sidebar-menu__items">
                 <li class="sidebar-menu__item">
-                    <a href="#" class="sidebar-menu__item-title">
-                        <span>Общие</span>
+                    <a href="/" class="sidebar-menu__item-title">
+                        <span>Common</span>
                         <i class="fas fa-caret-down"></i>
                     </a>
                     <ul class="sidebar-menu__subitems">
                         <li class="sidebar-menu__subitem">
-                            <a href="#">
+                            <a href="/dashboard">
                                 <i class="fas fa-user"></i>
-                                <span>Пользователи</span>
+                                <span>Users</span>
                             </a>
                         </li>
                     </ul>
@@ -64,6 +64,7 @@
                                         @csrf
                     </form>
                     @yield('content')
+                    <a href="{{ route('users') }}">To the dashboards</a>
         </main>
     </div>
 </body>

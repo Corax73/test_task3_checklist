@@ -129,21 +129,29 @@ class LoginController extends Controller
                 break;
 
             case 'Set max':
-                
-                $data['max'] = $request -> max;
-                $data['user_id'] = $id;
 
-                if($max = CountCheclistsForUser::where('user_id', $id) -> first()) {
-
-                    $max -> update($data);
-
-                } else {
+                if ($data = $request -> validate ([
+                    'max' => 'required',
+                ],
+                [
+                    'max.required' => 'Max is required',
+                    'max.integer' => 'Max is not integer'
+                ])) {
                     
-                    $setMax = CountCheclistsForUser::create($data);
-
-                }
+                    $data['user_id'] = $id;
+                    
+                    if($max = CountCheclistsForUser::where('user_id', $id) -> first()) {
+                        
+                        $max -> update($data);
+                    
+                    } else {
+                        
+                        $setMax = CountCheclistsForUser::create($data);
+                    
+                    }
                 
                 break;
+            }
         }
 
         return redirect('/dashboard');
@@ -153,10 +161,22 @@ class LoginController extends Controller
     public function checklists(Request $request)
     {
 
-        $checklists = Checklist::where('user_id', $request -> id) -> get();
+        $checklists = Checklist::where('user_id', $request -> user_id) -> get();
         
         return view('layouts.checklists', [
             'checklists' => $checklists
         ]);
+    }
+
+    public function listChecklists(Request $request)
+    {
+
+        $checklists = Checklist::where('id', $request -> id) -> first();
+        $items = $checklists -> items;
+        
+        return view('layouts.listChecklist', [
+            'items' => $items
+        ]);
+        
     }
 }
