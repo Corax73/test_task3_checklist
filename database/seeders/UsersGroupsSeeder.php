@@ -15,16 +15,16 @@ class UsersGroupsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('usersgroups') -> insert([
+        DB::table('users_groups') -> insert([
             'name' => 'SuperAdmin'
             ]);
-        DB::table('usersgroups') -> insert([
+        DB::table('users_groups') -> insert([
            'name' => 'Admin'
             ]);
-        DB::table('usersgroups') -> insert([
+        DB::table('users_groups') -> insert([
             'name' => 'Moderator'
             ]);
-        DB::table('usersgroups') -> insert([
+        DB::table('users_groups') -> insert([
             'name' => 'User'
             ]);
     }
