@@ -11,6 +11,7 @@ use App\Models\UsersGroup;
 use App\Models\Groupmembership;
 use App\Models\CountCheclistsForUser;
 use App\Models\Checklist;
+use App\Models\Blocked;
 
 class LoginController extends Controller
 {
@@ -107,7 +108,7 @@ class LoginController extends Controller
 
             case 'Change':
                 
-                $selectionGroup = $request ->  only('selection_group');
+                $selectionGroup = $request -> only('selection_group');
                 
                 $group = UsersGroup::where('name', $selectionGroup) -> first();
                 
@@ -149,10 +150,30 @@ class LoginController extends Controller
                         $setMax = CountCheclistsForUser::create($data);
                     
                     }
+                }
                 
                 break;
+            
+            case 'Set activity':
+
+                $activity['user_id'] = $id;
+                $activity += $request -> only('blocking');
+
+                if($blocked = Blocked::where('user_id', $id) -> first()) {
+                    
+                    $blocked = Blocked::where('user_id', $id) -> first();
+                    
+                    $blocked -> update(['blocking' => $activity['blocking']]);
+                
+                } else {
+                    
+                    $blocked = Blocked::create($activity);
+                
+                }
+
+                break;
+
             }
-        }
 
         return redirect('/dashboard');
 

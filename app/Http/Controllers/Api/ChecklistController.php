@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -27,6 +26,13 @@ class ChecklistController extends Controller
      */
     public function createChecklist(Request $request)
     {
+
+        if (checkBlockeds($request -> user_id)) {
+
+            return 'User is not active';
+
+        }
+
         if(checkAbility(1)) {
             
             if (checkCountUsersChecklists($request)) {
@@ -68,6 +74,13 @@ class ChecklistController extends Controller
 
     public function createItemChecklist(Request $request)
     {
+
+        if (checkBlockeds($request -> user_id)) {
+
+            return 'User is not active';
+
+        }
+        
         if(checkAbility(3)) {
 
             $input = $request -> all();
@@ -106,7 +119,13 @@ class ChecklistController extends Controller
 
     public function getUsersChecklists($user_id)
     {
-        if(checkAbility(7)) {
+        if (checkBlockeds($user_id)) {
+
+            return 'user is not active';
+
+        }
+        
+        if (checkAbility(7)) {
 
             $input['user_id'] = $user_id;
             
@@ -116,7 +135,7 @@ class ChecklistController extends Controller
 
             ]);
             
-            if($validator -> fails()){
+            if ($validator -> fails()){
                 
                 return sendError('Validation Error.', $validator -> errors());
             
@@ -141,7 +160,7 @@ class ChecklistController extends Controller
 
     public function getItemsChecklists($checklist_id)
     {
-        if(checkAbility(8)) {
+        if (checkAbility(8)) {
             
             $input['checklist_id'] = $checklist_id;
             
@@ -180,7 +199,7 @@ class ChecklistController extends Controller
     public function setItemsImplementation($checklist_id, $item_description, $implementation)
     {
         
-        if(checkAbility(5) AND checkAbility(6)) {
+        if (checkAbility(5) AND checkAbility(6)) {
             
             $input['checklist_id'] = $checklist_id;
             $input['description'] = $item_description;
@@ -194,7 +213,7 @@ class ChecklistController extends Controller
             
             ]);
             
-            if($validator -> fails()){
+            if ($validator -> fails()){
                 
                 return sendError('Validation Error.', $validator -> errors());
             
@@ -224,7 +243,7 @@ class ChecklistController extends Controller
 
     public function destroyUsersChecklists($checklist_id)
     {
-        if(checkAbility(2)) {
+        if (checkAbility(2)) {
             
             $input['checklist_id'] = $checklist_id;
             
@@ -234,7 +253,7 @@ class ChecklistController extends Controller
             
             ]);
             
-            if($validator -> fails()){
+            if ($validator -> fails()){
                 
                 return sendError('Validation Error.', $validator -> errors());
             
@@ -263,7 +282,7 @@ class ChecklistController extends Controller
 
     public function destroyItemsChecklists($checklist_id, $item_description)
     {
-        if(checkAbility(4)) {
+        if (checkAbility(4)) {
             
             $input['checklist_id'] = $checklist_id;
             $input['description'] = $item_description;
@@ -275,7 +294,7 @@ class ChecklistController extends Controller
 
             ]);
             
-            if($validator -> fails()){
+            if ($validator -> fails()){
                 
                 return sendError('Validation Error.', $validator -> errors());
             

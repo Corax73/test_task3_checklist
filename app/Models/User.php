@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this -> hasOne(Groupmembership::class, 'user_id', 'id');
     }
 
+    public function block()
+    {
+        return $this -> hasOne(Blocked::class, 'user_id', 'id');
+    }
+
     public function max()
     {
         return $this -> hasOne(CountCheclistsForUser::class, 'user_id', 'id');

@@ -15,17 +15,23 @@ if (! function_exists('checkCountUsersChecklists')) {
         
         $input1 = $request -> all();
         $user1 = User::find($input1['user_id']);
-
         $response1[] = $user1 -> checklists -> toArray();
-        
-        if(count($response1[0]) >= $user1 -> max ? $user1 -> max : 5) {
+
+        if(!$user1 -> max == null) {
+
+            if(count($response1[0]) >= $user1 -> max -> max) {
+
+                return true;
+            
+            } else {
+                
+                return false;
+            
+            }
+        } else {
             
             return true;
         
-        } else {
-
-            return false;
-
         }
     }
 }

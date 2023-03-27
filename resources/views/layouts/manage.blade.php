@@ -11,6 +11,7 @@
                         <th>Usersgroup name</th>
                         <th>Change usersgroup</th>
                         <th>Max count checklists</th>
+                        <th>Activity</th>
                     </thead>
                     <tbody>
                        @foreach($users as $key => $user)
@@ -52,6 +53,26 @@
                                 <span class="text-danger">{{ $errors->first('max') }}</span>
                                 @endif
                                 <p><input type="submit" name="action" class="b1" value="Set max"></p>
+                            </td>
+                            <td class="table-text">
+                            <p>
+                                @php
+                                if (!$user -> block == null) {
+                                    if ($user -> block -> blocking == 0) {
+                                        print 'User is active';
+                                    } else {
+                                        print 'User is blocked';
+                                    }
+                                } else {
+                                    print 'No set';
+                                }
+                                @endphp
+                            </p>
+                            <p><select name="blocking" class="select">
+                                    <option value="0">Active</option>
+                                    <option value="1">Blocked</option>
+                                </select></p>
+                                <p><input type="submit" name="action" class="b1" value="Set activity"></p>                                
                             </td>
                             </form>
                         </tr>
