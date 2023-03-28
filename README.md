@@ -34,9 +34,9 @@
 
 ## Окружение
 
-PHP 8.0.14 (cli)
-MySQL - 8.0.24
-Laravel Framework 9.52.4
+- PHP 8.0.14 (cli)
+- MySQL - 8.0.24
+- Laravel Framework 9.52.4
 
 ## Действия при запуске
 
@@ -47,11 +47,17 @@ Laravel Framework 9.52.4
 На локальном сервере разработки были такие:
 
 DB_CONNECTION=mysql
+
 DB_HOST=127.0.0.1
+
 DB_PORT=3306
+
 DB_DATABASE=checklist 
+
 DB_USERNAME=root
+
 DB_PASSWORD=
+
 
 Выполнить миграции.
 
@@ -60,30 +66,43 @@ DB_PASSWORD=
 <p align="cen-er"><img src="dbScheme.jpg"></p>
 
 Запускать сидеры последовательно:
+
 - UsersGroupsSeeder
 - AbilityGroupsSeeder
 - GroupAbilitiesSeeder
 - GroupmembershipsSeeder
 
 Создать клиента для доступа
+
 php artisan passport:client --password
 
 Для регистрации пользователей посылаем запросы post по пути http://ваш сервер:ваш порт/api/register, значения name, email, password и c_password соответственно.
+
 Логин по пути post http://ваш сервер:ваш порт/oauth/token. Получаем токены (при регистрации или логине), используем из для авторизации при запросах.
 
 Пути для работы api:
 
 http://ваш сервер:ваш порт/checklists/createChecklists - запрос post создание чеклиста, значения name и user_id
+
 http://ваш сервер:ваш порт/checklists/createItemChecklist - запрос post создание пункта чеклиста, значения checklist_id и description
+
 http://ваш сервер:ваш порт/checklists/getUsersChecklists/{user_id} - запрос get получение списка чеклистов пользователя
+
 http://ваш сервер:ваш порт/checklists/getItemsChecklists/{checklist_id} - запрос get получение пунктов чеклиста
+
 http://ваш сервер:ваш порт/checklists/setItemsImplementation/{checklist_id}/{item_description}/{implementation} - запрос patch установка парамета выполнения (0 - не выполнен, 1 - выполнен)
+
 http://ваш сервер:ваш порт/checklists/deleteChecklists/{checklist_id} - запрос delete удаление чеклиста (с удалением его пунктов)
+
 http://ваш сервер:ваш порт/checklists/deleteItemsChecklists/{checklist_id}/{item_description} - запрос delete удаление пункта чеклиста
 
+
 В административной панели выводится таблица. 
+
 В столбце Name ссылки ведут на view с чеклистами пользователя. Там,в свою очередь, есть кнопка List для просмотра пунктов чеклистов.
+
 Столбцы Id, Email, Created_at, Usersgroup id, Usersgroup name, Max count checklists, Activity - выводят соответствующую информацию о пользователе.
+
 Столбцы Change usersgroup, Max count checklists, Activity также позволяют установить нужное значение у пользователя в его группе, максимальном количестве ео чеклистов и активности (0 - заблокирован, 1 - заблокирован.)
 
 ## Условности
