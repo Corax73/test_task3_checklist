@@ -1,6 +1,3 @@
-<p align="cen-er"><a href="https://laravel.com" target="_blank"><img src="dbScheme.jpg"></a></p>
-
-
 ## Задание на PHP с использованием фреймворка (Yii2 или Laravel):
 
 # Необходимо реализовать сервис чек-листов:
@@ -57,6 +54,10 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 Выполнить миграции.
+
+Схема бд:
+
+<p align="cen-er"><img src="dbScheme.jpg"></p>
 
 Запускать сидеры последовательно:
 - UsersGroupsSeeder
