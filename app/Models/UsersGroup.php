@@ -13,9 +13,4 @@ class UsersGroup extends Model
       'name',
     ];
 
-    /*public function users()
-    {
-      return $this->hasMany('App\Models\User');
-    }*/
-
 }

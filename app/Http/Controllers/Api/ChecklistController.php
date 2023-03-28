@@ -75,7 +75,9 @@ class ChecklistController extends Controller
     public function createItemChecklist(Request $request)
     {
 
-        if (checkBlockeds($request -> user_id)) {
+        $user_id = Checklist::find($request -> checklist_id) -> whoUser -> id;
+
+        if (checkBlockeds($user_id)) {
 
             return 'User is not active';
 
@@ -121,7 +123,7 @@ class ChecklistController extends Controller
     {
         if (checkBlockeds($user_id)) {
 
-            return 'user is not active';
+            return 'User is not active';
 
         }
         
@@ -160,6 +162,14 @@ class ChecklistController extends Controller
 
     public function getItemsChecklists($checklist_id)
     {
+        $user_id = Checklist::find($checklist_id) -> whoUser -> id;
+
+        if (checkBlockeds($user_id)) {
+
+            return 'User is not active';
+
+        }
+
         if (checkAbility(8)) {
             
             $input['checklist_id'] = $checklist_id;
@@ -198,7 +208,14 @@ class ChecklistController extends Controller
 
     public function setItemsImplementation($checklist_id, $item_description, $implementation)
     {
-        
+        $user_id = Checklist::find($checklist_id) -> whoUser -> id;
+
+        if (checkBlockeds($user_id)) {
+
+            return 'User is not active';
+
+        }
+
         if (checkAbility(5) AND checkAbility(6)) {
             
             $input['checklist_id'] = $checklist_id;
@@ -243,6 +260,14 @@ class ChecklistController extends Controller
 
     public function destroyUsersChecklists($checklist_id)
     {
+        $user_id = Checklist::find($checklist_id) -> whoUser -> id;
+
+        if (checkBlockeds($user_id)) {
+
+            return 'User is not active';
+
+        }
+
         if (checkAbility(2)) {
             
             $input['checklist_id'] = $checklist_id;
@@ -282,6 +307,14 @@ class ChecklistController extends Controller
 
     public function destroyItemsChecklists($checklist_id, $item_description)
     {
+        $user_id = Checklist::find($checklist_id) -> whoUser -> id;
+        
+        if (checkBlockeds($user_id)) {
+
+            return 'User is not active';
+
+        }
+        
         if (checkAbility(4)) {
             
             $input['checklist_id'] = $checklist_id;
